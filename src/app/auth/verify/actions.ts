@@ -1,10 +1,8 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { consumeLoginToken } from "@/lib/auth";
 
-export async function confirmLogin(formData: FormData) {
+export async function confirmLogin(formData: FormData): Promise<boolean> {
   const token = String(formData.get("token") ?? "");
-  const ok = token ? await consumeLoginToken(token) : false;
-  redirect(ok ? "/" : "/login?error=expired");
+  return token ? await consumeLoginToken(token) : false;
 }
