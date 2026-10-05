@@ -13,7 +13,7 @@ export type StepSummary = {
 };
 
 export function StepList({ steps }: { steps: StepSummary[] }) {
-  const { done, reset } = useProgress();
+  const { done, reset, status } = useProgress();
 
   const total = steps.reduce((sum, step) => sum + step.itemCount, 0);
   const completed = steps.reduce(
@@ -88,7 +88,7 @@ export function StepList({ steps }: { steps: StepSummary[] }) {
         })}
       </ol>
 
-      {completed > 0 && (
+      {completed > 0 && status === "anon" && (
         <button
           type="button"
           onClick={() => {
