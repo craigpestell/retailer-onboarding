@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Analytics } from "@vercel/analytics/next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           General guidance, not legal or accounting advice. Rules and fees
           change, so confirm details on each official site.
         </footer>
+        <Analytics />
       </body>
     </html>
   );
