@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Analytics } from "@vercel/analytics/next";
 import { Geist } from "next/font/google";
+import { AuthNav } from "@/components/AuthNav";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -20,10 +22,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={`${geistSans.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <header className="border-b border-neutral-200 dark:border-neutral-800">
-          <div className="mx-auto flex max-w-2xl items-center px-4 py-4">
+          <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-4">
             <Link href="/" className="font-semibold">
               Start Your Store
             </Link>
+            <AuthNav />
           </div>
         </header>
         <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-10">
@@ -31,8 +34,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </main>
         <footer className="border-t border-neutral-200 py-6 text-center text-xs text-neutral-500 dark:border-neutral-800">
           General guidance, not legal or accounting advice. Rules and fees
-          change, so confirm details on each official site.
+          change, so confirm details on each official site.{" "}
+          <Link href="/privacy" className="underline">
+            Privacy
+          </Link>
         </footer>
+        <Analytics />
       </body>
     </html>
   );
