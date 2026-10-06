@@ -1,6 +1,6 @@
-import { captureStep } from "./lib.mjs";
+import { captureStep } from "../lib.mjs";
 
-await captureStep("02-register-business", [
+await captureStep("bc", "02-register-business", [
   {
     n: 1,
     alt: "BC Registries and Online Services home page with the Create Account button highlighted",

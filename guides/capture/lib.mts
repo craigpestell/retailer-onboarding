@@ -7,8 +7,9 @@ const OUT_DIR = path.resolve("public/guides");
 const MANIFEST = path.resolve("guides/manifest.json");
 
 export type Shot = {
+  region: string; // content folder, e.g. "bc"
   step: string;
-  file: string; // path under public/, e.g. guides/02-register-business/01.webp
+  file: string; // path under public/, e.g. guides/bc/02-register-business/01.webp
   url: string;
   alt: string;
   caption: string;
@@ -68,9 +69,13 @@ async function annotate(page: Page, targets: Locator[]) {
   }
 }
 
-/** Capture every shot for one step, write images, and merge into the manifest. */
-export async function captureStep(step: string, captures: Capture[]) {
-  const dir = path.join(OUT_DIR, step);
+/** Capture every shot for one region's step, write images, and merge into the manifest. */
+export async function captureStep(
+  region: string,
+  step: string,
+  captures: Capture[],
+) {
+  const dir = path.join(OUT_DIR, region, step);
   await mkdir(dir, { recursive: true });
 
   const browser = await chromium.launch();
@@ -89,14 +94,15 @@ export async function captureStep(step: string, captures: Capture[]) {
       const name = `${String(c.n).padStart(2, "0")}.webp`;
       await sharp(png).webp({ quality: 85 }).toFile(path.join(dir, name));
       shots.push({
+        region,
         step,
-        file: `guides/${step}/${name}`,
+        file: `guides/${region}/${step}/${name}`,
         url: page.url(),
         alt: c.alt,
         caption: c.caption,
         capturedAt: new Date().toISOString().slice(0, 10),
       });
-      console.log(`captured ${step}/${name}  ${page.url()}`);
+      console.log(`captured ${region}/${step}/${name}  ${page.url()}`);
     }
   } finally {
     await browser.close();
@@ -106,8 +112,9 @@ export async function captureStep(step: string, captures: Capture[]) {
   try {
     existing = JSON.parse(await readFile(MANIFEST, "utf8"));
   } catch {}
-  const merged = [...existing.filter((s) => s.step !== step), ...shots].sort(
-    (a, b) => a.file.localeCompare(b.file),
-  );
+  const merged = [
+    ...existing.filter((s) => s.region !== region || s.step !== step),
+    ...shots,
+  ].sort((a, b) => a.file.localeCompare(b.file));
   await writeFile(MANIFEST, JSON.stringify(merged, null, 2) + "\n");
 }

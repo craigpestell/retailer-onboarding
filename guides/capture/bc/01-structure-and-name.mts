@@ -1,8 +1,8 @@
-import { captureStep } from "./lib.mjs";
+import { captureStep } from "../lib.mjs";
 
 const NAMES = "https://www.names.bcregistry.gov.bc.ca/";
 
-await captureStep("01-structure-and-name", [
+await captureStep("bc", "01-structure-and-name", [
   {
     n: 1,
     alt: "Name Request page with the action selector for starting a new business name",
