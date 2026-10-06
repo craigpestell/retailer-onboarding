@@ -46,7 +46,7 @@ export default function AccountPage() {
     <div>
       <h1 className="text-2xl font-bold tracking-tight">Account</h1>
       <p className="mt-2 text-neutral-600 dark:text-neutral-400">
-        Signed in as <strong>{email}</strong>. {done.size} tasks saved.
+        Signed in as <strong>{email}</strong>. {done.size} checklist {done.size === 1 ? "item" : "items"} completed.
       </p>
 
       <div className="mt-6 flex flex-wrap gap-3">
