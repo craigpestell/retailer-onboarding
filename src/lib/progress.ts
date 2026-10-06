@@ -4,7 +4,8 @@ import { useCallback, useEffect, useSyncExternalStore } from "react";
 
 /**
  * Checklist progress with two backends behind one interface:
- *  - anonymous visitors: localStorage only, nothing is sent to a server
+ *  - anonymous visitors: localStorage only (each tick is also logged to
+ *    /api/events as an anonymous usage stat, with no identifier)
  *  - signed-in users: the account (database) via /api/progress
  * On first load after sign-in, ticks held in the browser are merged into the
  * account and then cleared locally, so the account is the single source of truth.
@@ -139,6 +140,13 @@ export function useProgress() {
 
     writeLocal(next);
     setState({ ...before, ids: next });
+    // Anonymous usage stat only; the tick itself stays in this browser.
+    void fetch("/api/events", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, done }),
+      keepalive: true,
+    }).catch(() => {});
   }, []);
 
   const reset = useCallback(() => {

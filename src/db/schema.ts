@@ -1,4 +1,5 @@
 import {
+  boolean,
   index,
   jsonb,
   pgTable,
@@ -59,4 +60,21 @@ export const progress = pgTable(
     doneAt: timestamp("done_at").notNull().defaultNow(),
   },
   (t) => [primaryKey({ columns: [t.userId, t.itemId] })],
+);
+
+// Append-only log of checklist ticks and unticks, for usage stats. userId is
+// null for visitors who aren't signed in (no other identifier is stored).
+export const checklistEvents = pgTable(
+  "checklist_events",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
+    itemId: text("item_id").notNull(),
+    done: boolean("done").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (t) => [
+    index("checklist_events_created_idx").on(t.createdAt),
+    index("checklist_events_item_idx").on(t.itemId),
+  ],
 );

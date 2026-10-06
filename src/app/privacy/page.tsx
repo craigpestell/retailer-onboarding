@@ -14,15 +14,20 @@ export default function PrivacyPage() {
       <h2>If you don&apos;t sign in</h2>
       <p>
         Your checklist progress is saved in your browser&apos;s local storage on
-        your own device. It is never sent to us. Clearing your browser data
-        removes it.
+        your own device. Clearing your browser data removes it. When you tick
+        or untick a task, we record which task and when, as an anonymous usage
+        statistic. Nothing that identifies you or your device (no IP address,
+        cookie or ID) is stored with it.
       </p>
 
       <h2>If you sign in</h2>
       <p>We store:</p>
       <ul>
         <li>your email address</li>
-        <li>which checklist tasks you have ticked, and when</li>
+        <li>
+          which checklist tasks you have ticked, and a log of each time you
+          ticked or unticked a task, linked to your account
+        </li>
         <li>
           only if you choose to fill in the &quot;Your business details&quot;
           page: the business name, address and registration or tax numbers you
@@ -42,16 +47,15 @@ export default function PrivacyPage() {
 
       <h2>Analytics</h2>
       <p>
-        We use Vercel Web Analytics, which is cookieless. It records aggregate
-        page views and anonymous events such as &ldquo;a task in step X was
-        ticked&rdquo;. These events aren&apos;t linked to your email or
-        account.
+        We use Vercel Web Analytics, which is cookieless, for aggregate page
+        views. Checklist activity is recorded in our own database as described
+        above, not by a third party.
       </p>
 
       <h2>Services we use</h2>
       <ul>
         <li>Vercel: hosting and analytics</li>
-        <li>A managed Postgres database: stores account data</li>
+        <li>A managed Postgres database: stores account data and checklist activity</li>
         <li>Resend: delivers sign-in emails</li>
         <li>
           Cloudflare Turnstile: a human check on the sign-in form, to prevent

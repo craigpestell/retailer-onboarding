@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { getDb } from "@/db";
-import { progress } from "@/db/schema";
+import { checklistEvents, progress } from "@/db/schema";
 import { getSessionUser } from "@/lib/auth";
 import { validItemIds } from "@/lib/progress-server";
 import { isSameOrigin } from "@/lib/request-guard";
@@ -50,5 +50,8 @@ export async function POST(request: Request) {
       .delete(progress)
       .where(and(eq(progress.userId, user.id), eq(progress.itemId, body.id)));
   }
+  await db
+    .insert(checklistEvents)
+    .values({ userId: user.id, itemId: body.id, done: body.done });
   return Response.json({ ok: true });
 }
