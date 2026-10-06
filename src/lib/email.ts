@@ -22,5 +22,8 @@ export async function sendLoginEmail(to: string, link: string): Promise<void> {
       text: `Use this link to sign in to Start Your Store. It works once and expires in 15 minutes.\n\n${link}\n\nIf you didn't ask for this, you can ignore this email.`,
     }),
   });
-  if (!res.ok) throw new Error(`Resend failed: ${res.status}`);
+  if (!res.ok) {
+    const detail = await res.text().catch(() => "");
+    throw new Error(`Resend failed: ${res.status} ${detail.slice(0, 300)}`);
+  }
 }

@@ -4,7 +4,7 @@ summary: Separate from GST, and the step people most often miss.
 time: 30–45 minutes
 cost: Free
 linkLabel: eTaxBC
-linkUrl: https://www.etax.gov.bc.ca
+linkUrl: https://www.etax.gov.bc.ca/btp/eservices/_/
 checklist:
   - Register for PST through eTaxBC
   - Note your PST number

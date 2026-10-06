@@ -20,4 +20,4 @@ Your BC Registry confirmation, your Business Number and government ID.
 
 ## Tell the bank what you sell
 
-Some banks and payment processors treat adult retail as higher risk. Being upfront now avoids having an account closed later.
+Some banks and payment processors treat certain product categories as higher risk. Being upfront now avoids having an account closed later.

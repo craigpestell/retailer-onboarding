@@ -3,6 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Markdown from "react-markdown";
 import { Checklist } from "@/components/Checklist";
+import { GuideShots } from "@/components/GuideShots";
+import { getGuideShots } from "@/lib/guides";
+import { getSection } from "@/lib/profile";
 import { getStep, getSteps } from "@/lib/steps";
 
 export function generateStaticParams() {
@@ -24,6 +27,7 @@ export default async function StepPage(props: PageProps<"/steps/[slug]">) {
 
   const steps = getSteps();
   const index = steps.findIndex((s) => s.slug === slug);
+  const section = getSection(step.slug);
   const prev = steps[index - 1];
   const next = steps[index + 1];
 
@@ -69,6 +73,8 @@ export default async function StepPage(props: PageProps<"/steps/[slug]">) {
         </a>
       )}
 
+      <GuideShots stepTitle={step.title} shots={getGuideShots(step.slug)} />
+
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <Markdown>{step.body}</Markdown>
       </div>
@@ -76,6 +82,16 @@ export default async function StepPage(props: PageProps<"/steps/[slug]">) {
       <section className="mt-10">
         <h2 className="mb-3 text-lg font-semibold">Your checklist</h2>
         <Checklist slug={step.slug} items={step.checklist} />
+        {section && (
+          <p className="mt-4 text-sm">
+            <Link
+              href={`/details#${step.slug}`}
+              className="text-neutral-500 hover:text-neutral-800 hover:underline dark:hover:text-neutral-200"
+            >
+              Save your {section.linkText} →
+            </Link>
+          </p>
+        )}
       </section>
 
       <nav className="mt-12 flex justify-between gap-4 border-t border-neutral-200 pt-6 text-sm dark:border-neutral-800">

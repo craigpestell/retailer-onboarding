@@ -21,8 +21,6 @@ Register a **sole proprietorship** through BC Registry Services. You will need y
 
 Business registration details are public record. If you work from home and do not want strangers or customers to see your address, use a **PO box or a mailing address service** instead.
 
-This matters more than usual when you sell adult products.
-
 ## Keep it
 
 Save the confirmation. You will need it for the bank account, the municipal licence and your supplier account.

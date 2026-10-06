@@ -50,6 +50,12 @@ export default function AccountPage() {
       </p>
 
       <div className="mt-6 flex flex-wrap gap-3">
+        <Link
+          href="/details"
+          className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-900"
+        >
+          Your business details
+        </Link>
         <button
           type="button"
           disabled={busy}
