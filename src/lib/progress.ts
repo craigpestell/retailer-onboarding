@@ -95,7 +95,12 @@ function subscribe(callback: () => void) {
   };
 }
 
-export const itemId = (slug: string, index: number) => `${slug}:${index}`;
+/**
+ * BC ids stay unprefixed ("pst:2") so ticks saved before other regions existed
+ * remain valid; every other region is prefixed ("on:hst:1").
+ */
+export const itemId = (region: string, slug: string, index: number) =>
+  region === "bc" ? `${slug}:${index}` : `${region}:${slug}:${index}`;
 
 export function useProgress() {
   const current = useSyncExternalStore(

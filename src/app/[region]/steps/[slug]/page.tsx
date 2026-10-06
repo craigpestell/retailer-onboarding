@@ -6,38 +6,51 @@ import { Checklist } from "@/components/Checklist";
 import { GuideShots } from "@/components/GuideShots";
 import { getGuideShots } from "@/lib/guides";
 import { getSection } from "@/lib/profile";
+import { getAvailableRegions, getRegion } from "@/lib/regions";
 import { getStep, getSteps } from "@/lib/steps";
 
+export const dynamicParams = false;
+
 export function generateStaticParams() {
-  return getSteps().map((step) => ({ slug: step.slug }));
+  return getAvailableRegions().flatMap((region) =>
+    getSteps(region.slug).map((step) => ({
+      region: region.slug,
+      slug: step.slug,
+    })),
+  );
 }
 
 export async function generateMetadata(
-  props: PageProps<"/steps/[slug]">,
+  props: PageProps<"/[region]/steps/[slug]">,
 ): Promise<Metadata> {
-  const { slug } = await props.params;
-  const step = getStep(slug);
+  const { region, slug } = await props.params;
+  const step = getStep(region, slug);
   return { title: step ? `${step.title} · Start Your Store` : "Not found" };
 }
 
-export default async function StepPage(props: PageProps<"/steps/[slug]">) {
-  const { slug } = await props.params;
-  const step = getStep(slug);
-  if (!step) notFound();
+export default async function StepPage(
+  props: PageProps<"/[region]/steps/[slug]">,
+) {
+  const { region: regionSlug, slug } = await props.params;
+  const region = getRegion(regionSlug);
+  const step = region?.available ? getStep(regionSlug, slug) : undefined;
+  if (!region || !step) notFound();
 
-  const steps = getSteps();
+  const steps = getSteps(regionSlug);
   const index = steps.findIndex((s) => s.slug === slug);
-  const section = getSection(step.slug);
+  // Profile sections and screenshots are written for BC's steps only.
+  const isBc = regionSlug === "bc";
+  const section = isBc ? getSection(step.slug) : undefined;
   const prev = steps[index - 1];
   const next = steps[index + 1];
 
   return (
     <article>
       <Link
-        href="/"
+        href={`/${regionSlug}`}
         className="text-sm text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200"
       >
-        ← All steps
+        ← All {region.name} steps
       </Link>
       <p className="mt-6 text-sm font-medium text-emerald-700 dark:text-emerald-500">
         Step {step.order} of {steps.length}
@@ -73,7 +86,7 @@ export default async function StepPage(props: PageProps<"/steps/[slug]">) {
         </a>
       )}
 
-      <GuideShots stepTitle={step.title} shots={getGuideShots(step.slug)} />
+      <GuideShots stepTitle={step.title} shots={isBc ? getGuideShots(step.slug) : []} />
 
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <Markdown>{step.body}</Markdown>
@@ -81,7 +94,11 @@ export default async function StepPage(props: PageProps<"/steps/[slug]">) {
 
       <section className="mt-10">
         <h2 className="mb-3 text-lg font-semibold">Your checklist</h2>
-        <Checklist slug={step.slug} items={step.checklist} />
+        <Checklist
+          region={regionSlug}
+          slug={step.slug}
+          items={step.checklist}
+        />
         {section && (
           <p className="mt-4 text-sm">
             <Link
@@ -96,7 +113,10 @@ export default async function StepPage(props: PageProps<"/steps/[slug]">) {
 
       <nav className="mt-12 flex justify-between gap-4 border-t border-neutral-200 pt-6 text-sm dark:border-neutral-800">
         {prev ? (
-          <Link href={`/steps/${prev.slug}`} className="hover:underline">
+          <Link
+            href={`/${regionSlug}/steps/${prev.slug}`}
+            className="hover:underline"
+          >
             ← {prev.title}
           </Link>
         ) : (
@@ -104,13 +124,13 @@ export default async function StepPage(props: PageProps<"/steps/[slug]">) {
         )}
         {next ? (
           <Link
-            href={`/steps/${next.slug}`}
+            href={`/${regionSlug}/steps/${next.slug}`}
             className="text-right font-medium hover:underline"
           >
             {next.title} →
           </Link>
         ) : (
-          <Link href="/" className="font-medium hover:underline">
+          <Link href={`/${regionSlug}`} className="font-medium hover:underline">
             Back to overview
           </Link>
         )}

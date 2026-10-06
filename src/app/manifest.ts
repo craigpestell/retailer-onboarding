@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Start Your Store",
     short_name: "Start Your Store",
     description:
-      "A step-by-step checklist for registering and launching an online retail business in British Columbia.",
+      "Step-by-step checklists for registering and launching an online retail business, by province and state.",
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",

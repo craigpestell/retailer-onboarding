@@ -7,7 +7,7 @@ export default function PrivacyPage() {
     <article className="prose prose-neutral max-w-none dark:prose-invert">
       <h1>Privacy</h1>
       <p>
-        This guide helps new retailers set up a business in British Columbia.
+        This guide helps new retailers set up a business in Canada and the United States.
         We collect as little as we can. This page explains exactly what.
       </p>
 
