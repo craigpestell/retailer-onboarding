@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PROFILE_SECTIONS, toExport, type Profile } from "@/lib/profile";
 import { useProgress } from "@/lib/progress";
 
@@ -12,6 +12,23 @@ export default function DetailsPage() {
   const [profile, setProfile] = useState<Profile>({});
   const [loaded, setLoaded] = useState(false);
   const [saved, setSaved] = useState<Saved>("idle");
+  const latest = useRef<Profile | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  // Don't lose a pending edit if the user navigates away within the debounce window.
+  useEffect(() => {
+    return () => {
+      clearTimeout(timer.current);
+      if (latest.current) {
+        void fetch("/api/profile", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ profile: latest.current }),
+          keepalive: true,
+        });
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (status !== "user") return;
@@ -60,19 +77,36 @@ export default function DetailsPage() {
     );
   }
 
-  async function save(e: React.FormEvent) {
-    e.preventDefault();
+  async function save(next: Profile) {
     setSaved("saving");
     try {
       const res = await fetch("/api/profile", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ profile }),
+        body: JSON.stringify({ profile: next }),
+        keepalive: true,
       });
       setSaved(res.ok ? "saved" : "error");
     } catch {
       setSaved("error");
     }
+  }
+
+  // Saves shortly after the user stops typing, and straight away when a field loses focus.
+  function change(key: string, value: string) {
+    const next = { ...profile, [key]: value };
+    setProfile(next);
+    setSaved("idle");
+    latest.current = next;
+    clearTimeout(timer.current);
+    timer.current = setTimeout(flush, 800);
+  }
+
+  function flush() {
+    clearTimeout(timer.current);
+    const next = latest.current;
+    latest.current = null;
+    if (next) void save(next);
   }
 
   function download() {
@@ -95,7 +129,7 @@ export default function DetailsPage() {
         only you can see it.
       </p>
 
-      <form onSubmit={save} className="mt-8 space-y-10">
+      <form onSubmit={(e) => e.preventDefault()} className="mt-8 space-y-10">
         {PROFILE_SECTIONS.map((section) => (
           <section key={section.step} id={section.step} className="scroll-mt-6">
             <h2 className="font-semibold">{section.title}</h2>
@@ -109,10 +143,9 @@ export default function DetailsPage() {
                     maxLength={200}
                     placeholder={f.placeholder}
                     autoComplete={f.autoComplete}
-                    onChange={(e) => {
-                      setProfile({ ...profile, [f.key]: e.target.value });
-                      setSaved("idle");
-                    }}
+                    onChange={(e) => change(f.key, e.target.value)}
+                    onBlur={flush}
+                    disabled={!loaded}
                     className="mt-1 w-full rounded-lg border border-neutral-300 bg-transparent px-3 py-2 dark:border-neutral-700"
                   />
                   {f.hint && (
@@ -126,13 +159,6 @@ export default function DetailsPage() {
 
         <div className="flex flex-wrap items-center gap-3">
           <button
-            type="submit"
-            disabled={!loaded || saved === "saving"}
-            className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-60"
-          >
-            Save
-          </button>
-          <button
             type="button"
             onClick={download}
             className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-900"
@@ -140,8 +166,9 @@ export default function DetailsPage() {
             Download JSON
           </button>
           <span role="status" className="text-sm text-neutral-500">
-            {saved === "saved" && "Saved."}
-            {saved === "error" && "Couldn't save. Please try again."}
+            {saved === "saving" && "Saving…"}
+            {saved === "saved" && "All changes saved."}
+            {saved === "error" && "Couldn't save. Check your connection and keep typing to retry."}
           </span>
         </div>
       </form>
