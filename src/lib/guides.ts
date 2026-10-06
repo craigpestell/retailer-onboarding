@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 export type GuideShot = {
+  region: string;
   step: string;
   file: string;
   url: string;
@@ -20,7 +21,9 @@ function readManifest(): GuideShot[] {
   }
 }
 
-/** Screenshots for a step slug, in capture order. */
-export function getGuideShots(slug: string): GuideShot[] {
-  return readManifest().filter((s) => s.step.replace(/^\d+-/, "") === slug);
+/** Screenshots for one region's step slug, in capture order. */
+export function getGuideShots(region: string, slug: string): GuideShot[] {
+  return readManifest().filter(
+    (s) => s.region === region && s.step.replace(/^\d+-/, "") === slug,
+  );
 }

@@ -1,6 +1,6 @@
-import { captureStep } from "./lib.mjs";
+import { captureStep } from "../lib.mjs";
 
-await captureStep("05-pst", [
+await captureStep("bc", "05-pst", [
   {
     n: 1,
     alt: "eTaxBC log on page with the Enrol now option highlighted",

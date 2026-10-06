@@ -1,9 +1,9 @@
-import { captureStep } from "./lib.mjs";
+import { captureStep } from "../lib.mjs";
 
 const GST =
   "https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/gst-hst-businesses.html";
 
-await captureStep("04-gst", [
+await captureStep("bc", "04-gst", [
   {
     n: 1,
     alt: "CRA GST/HST for businesses page with the Who needs to register section highlighted",

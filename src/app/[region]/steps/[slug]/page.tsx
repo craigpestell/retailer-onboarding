@@ -38,9 +38,8 @@ export default async function StepPage(
 
   const steps = getSteps(regionSlug);
   const index = steps.findIndex((s) => s.slug === slug);
-  // Profile sections and screenshots are written for BC's steps only.
-  const isBc = regionSlug === "bc";
-  const section = isBc ? getSection(step.slug) : undefined;
+  // Profile sections are written for BC's steps only.
+  const section = regionSlug === "bc" ? getSection(step.slug) : undefined;
   const prev = steps[index - 1];
   const next = steps[index + 1];
 
@@ -86,7 +85,7 @@ export default async function StepPage(
         </a>
       )}
 
-      <GuideShots stepTitle={step.title} shots={isBc ? getGuideShots(step.slug) : []} />
+      <GuideShots stepTitle={step.title} shots={getGuideShots(regionSlug, step.slug)} />
 
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <Markdown>{step.body}</Markdown>

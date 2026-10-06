@@ -1,8 +1,8 @@
-import { captureStep } from "./lib.mjs";
+import { captureStep } from "../lib.mjs";
 
 const BN = "https://www.canada.ca/en/services/taxes/business-registration.html";
 
-await captureStep("03-business-number", [
+await captureStep("bc", "03-business-number", [
   {
     n: 1,
     alt: "CRA business registration page with the Register with Business Registration Online link highlighted",

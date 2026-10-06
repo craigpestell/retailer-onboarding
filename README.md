@@ -13,7 +13,9 @@ Optional account (magic-link email login): progress saved to Postgres and synced
 
 Each region has a folder of steps, `content/<code>/` (`bc`, `on`, …). The home page lists every province, territory and state from `research/queue.json`; a region becomes a live guide as soon as its `content/<code>/` folder exists, and stays "coming soon" until then. Routes are `/<code>` and `/<code>/steps/<slug>`.
 
-To add a region: review `research/jurisdictions/<id>.md` (written by the `jurisdiction-researcher` agent), write the steps into `content/<code>/`, and mark it `done` in the queue. Checklist ticks for BC keep their original unprefixed ids (`pst:2`); other regions are prefixed (`on:hst:1`). The business details page and step screenshots are BC-only for now.
+To add a region: review `research/jurisdictions/<id>.md` (written by the `jurisdiction-researcher` agent), write the steps into `content/<code>/`, and mark it `done` in the queue. Checklist ticks for BC keep their original unprefixed ids (`pst:2`); other regions are prefixed (`on:hst:1`). The business details page is BC-only for now.
+
+Step screenshots are per region: capture scripts live in `guides/capture/<code>/`, images in `public/guides/<code>/<step>/`, and each `guides/manifest.json` entry carries a `region`. Run one with `npm run guides:capture guides/capture/<code>/<step>.mts`.
 
 Each step is a Markdown file, ordered by filename prefix (`01-…`, `02-…`).
 Frontmatter: `title`, `summary`, `time`, `cost`, optional `linkLabel`/`linkUrl`, and `checklist` (list of tasks).
