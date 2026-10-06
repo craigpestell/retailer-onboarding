@@ -11,6 +11,7 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.APP_URL ?? "https://bizrocket.ca"),
   title: "Start Your Store: BC Setup Guide",
   description:
     "A step-by-step checklist for registering and launching an online retail business in British Columbia.",
