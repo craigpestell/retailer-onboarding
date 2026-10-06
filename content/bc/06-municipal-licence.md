@@ -21,7 +21,7 @@ Some municipalities require a **home-occupation permit** or limit customer visit
 
 ## Be upfront about what you sell
 
-Tell them exactly what you will sell. Some municipalities have bylaws on adult-oriented retail. These often target storefronts, but you want to know before you start, not after.
+Tell them exactly what you will sell. Some products or business types carry extra bylaws or requirements, so you want to know before you start, not after.
 
 ## Multiple municipalities
 

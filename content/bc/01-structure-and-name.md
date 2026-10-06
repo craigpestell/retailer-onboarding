@@ -21,10 +21,10 @@ The trade-off is that you are **personally liable** for the business. Insurance 
 ## Name
 
 - If you trade under just your own legal name (for example "Jane Smith"), you do not have to register a name.
-- If you use any other name, for example "Jane's Pleasure Boutique", you **must register it** in the next step.
+- If you use any other name, for example "Jane's Gift Shop", you **must register it** in the next step.
 
 Pick a name that is unique, easy to spell and easy to say. Search it at BC Registry before you fall in love with it.
 
-## Adult retail note
+## Keep it practical
 
-Choose a name you are comfortable seeing on a bank statement, a licence and a shipping label. A neutral name also helps with payment processors.
+Choose a name you are comfortable seeing on a bank statement, a licence and a shipping label.
