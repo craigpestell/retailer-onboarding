@@ -1,0 +1,451 @@
+[
+  {
+    "id": "ca-ab",
+    "country": "CA",
+    "code": "AB",
+    "name": "Alberta",
+    "status": "pending"
+  },
+  {
+    "id": "ca-bc",
+    "country": "CA",
+    "code": "BC",
+    "name": "British Columbia",
+    "status": "done",
+    "note": "Existing guides in content/bc"
+  },
+  {
+    "id": "ca-mb",
+    "country": "CA",
+    "code": "MB",
+    "name": "Manitoba",
+    "status": "pending"
+  },
+  {
+    "id": "ca-nb",
+    "country": "CA",
+    "code": "NB",
+    "name": "New Brunswick",
+    "status": "pending"
+  },
+  {
+    "id": "ca-nl",
+    "country": "CA",
+    "code": "NL",
+    "name": "Newfoundland and Labrador",
+    "status": "pending"
+  },
+  {
+    "id": "ca-ns",
+    "country": "CA",
+    "code": "NS",
+    "name": "Nova Scotia",
+    "status": "pending"
+  },
+  {
+    "id": "ca-on",
+    "country": "CA",
+    "code": "ON",
+    "name": "Ontario",
+    "status": "pending"
+  },
+  {
+    "id": "ca-pe",
+    "country": "CA",
+    "code": "PE",
+    "name": "Prince Edward Island",
+    "status": "pending"
+  },
+  {
+    "id": "ca-qc",
+    "country": "CA",
+    "code": "QC",
+    "name": "Quebec",
+    "status": "pending"
+  },
+  {
+    "id": "ca-sk",
+    "country": "CA",
+    "code": "SK",
+    "name": "Saskatchewan",
+    "status": "pending"
+  },
+  {
+    "id": "ca-nt",
+    "country": "CA",
+    "code": "NT",
+    "name": "Northwest Territories",
+    "status": "pending"
+  },
+  {
+    "id": "ca-nu",
+    "country": "CA",
+    "code": "NU",
+    "name": "Nunavut",
+    "status": "pending"
+  },
+  {
+    "id": "ca-yt",
+    "country": "CA",
+    "code": "YT",
+    "name": "Yukon",
+    "status": "pending"
+  },
+  {
+    "id": "us-al",
+    "country": "US",
+    "code": "AL",
+    "name": "Alabama",
+    "status": "pending"
+  },
+  {
+    "id": "us-ak",
+    "country": "US",
+    "code": "AK",
+    "name": "Alaska",
+    "status": "pending"
+  },
+  {
+    "id": "us-az",
+    "country": "US",
+    "code": "AZ",
+    "name": "Arizona",
+    "status": "pending"
+  },
+  {
+    "id": "us-ar",
+    "country": "US",
+    "code": "AR",
+    "name": "Arkansas",
+    "status": "pending"
+  },
+  {
+    "id": "us-ca",
+    "country": "US",
+    "code": "CA",
+    "name": "California",
+    "status": "pending"
+  },
+  {
+    "id": "us-co",
+    "country": "US",
+    "code": "CO",
+    "name": "Colorado",
+    "status": "pending"
+  },
+  {
+    "id": "us-ct",
+    "country": "US",
+    "code": "CT",
+    "name": "Connecticut",
+    "status": "pending"
+  },
+  {
+    "id": "us-de",
+    "country": "US",
+    "code": "DE",
+    "name": "Delaware",
+    "status": "pending"
+  },
+  {
+    "id": "us-dc",
+    "country": "US",
+    "code": "DC",
+    "name": "District of Columbia",
+    "status": "pending"
+  },
+  {
+    "id": "us-fl",
+    "country": "US",
+    "code": "FL",
+    "name": "Florida",
+    "status": "pending"
+  },
+  {
+    "id": "us-ga",
+    "country": "US",
+    "code": "GA",
+    "name": "Georgia",
+    "status": "pending"
+  },
+  {
+    "id": "us-hi",
+    "country": "US",
+    "code": "HI",
+    "name": "Hawaii",
+    "status": "pending"
+  },
+  {
+    "id": "us-id",
+    "country": "US",
+    "code": "ID",
+    "name": "Idaho",
+    "status": "pending"
+  },
+  {
+    "id": "us-il",
+    "country": "US",
+    "code": "IL",
+    "name": "Illinois",
+    "status": "pending"
+  },
+  {
+    "id": "us-in",
+    "country": "US",
+    "code": "IN",
+    "name": "Indiana",
+    "status": "pending"
+  },
+  {
+    "id": "us-ia",
+    "country": "US",
+    "code": "IA",
+    "name": "Iowa",
+    "status": "pending"
+  },
+  {
+    "id": "us-ks",
+    "country": "US",
+    "code": "KS",
+    "name": "Kansas",
+    "status": "pending"
+  },
+  {
+    "id": "us-ky",
+    "country": "US",
+    "code": "KY",
+    "name": "Kentucky",
+    "status": "pending"
+  },
+  {
+    "id": "us-la",
+    "country": "US",
+    "code": "LA",
+    "name": "Louisiana",
+    "status": "pending"
+  },
+  {
+    "id": "us-me",
+    "country": "US",
+    "code": "ME",
+    "name": "Maine",
+    "status": "pending"
+  },
+  {
+    "id": "us-md",
+    "country": "US",
+    "code": "MD",
+    "name": "Maryland",
+    "status": "pending"
+  },
+  {
+    "id": "us-ma",
+    "country": "US",
+    "code": "MA",
+    "name": "Massachusetts",
+    "status": "pending"
+  },
+  {
+    "id": "us-mi",
+    "country": "US",
+    "code": "MI",
+    "name": "Michigan",
+    "status": "pending"
+  },
+  {
+    "id": "us-mn",
+    "country": "US",
+    "code": "MN",
+    "name": "Minnesota",
+    "status": "pending"
+  },
+  {
+    "id": "us-ms",
+    "country": "US",
+    "code": "MS",
+    "name": "Mississippi",
+    "status": "pending"
+  },
+  {
+    "id": "us-mo",
+    "country": "US",
+    "code": "MO",
+    "name": "Missouri",
+    "status": "pending"
+  },
+  {
+    "id": "us-mt",
+    "country": "US",
+    "code": "MT",
+    "name": "Montana",
+    "status": "pending"
+  },
+  {
+    "id": "us-ne",
+    "country": "US",
+    "code": "NE",
+    "name": "Nebraska",
+    "status": "pending"
+  },
+  {
+    "id": "us-nv",
+    "country": "US",
+    "code": "NV",
+    "name": "Nevada",
+    "status": "pending"
+  },
+  {
+    "id": "us-nh",
+    "country": "US",
+    "code": "NH",
+    "name": "New Hampshire",
+    "status": "pending"
+  },
+  {
+    "id": "us-nj",
+    "country": "US",
+    "code": "NJ",
+    "name": "New Jersey",
+    "status": "pending"
+  },
+  {
+    "id": "us-nm",
+    "country": "US",
+    "code": "NM",
+    "name": "New Mexico",
+    "status": "pending"
+  },
+  {
+    "id": "us-ny",
+    "country": "US",
+    "code": "NY",
+    "name": "New York",
+    "status": "pending"
+  },
+  {
+    "id": "us-nc",
+    "country": "US",
+    "code": "NC",
+    "name": "North Carolina",
+    "status": "pending"
+  },
+  {
+    "id": "us-nd",
+    "country": "US",
+    "code": "ND",
+    "name": "North Dakota",
+    "status": "pending"
+  },
+  {
+    "id": "us-oh",
+    "country": "US",
+    "code": "OH",
+    "name": "Ohio",
+    "status": "pending"
+  },
+  {
+    "id": "us-ok",
+    "country": "US",
+    "code": "OK",
+    "name": "Oklahoma",
+    "status": "pending"
+  },
+  {
+    "id": "us-or",
+    "country": "US",
+    "code": "OR",
+    "name": "Oregon",
+    "status": "pending"
+  },
+  {
+    "id": "us-pa",
+    "country": "US",
+    "code": "PA",
+    "name": "Pennsylvania",
+    "status": "pending"
+  },
+  {
+    "id": "us-ri",
+    "country": "US",
+    "code": "RI",
+    "name": "Rhode Island",
+    "status": "pending"
+  },
+  {
+    "id": "us-sc",
+    "country": "US",
+    "code": "SC",
+    "name": "South Carolina",
+    "status": "pending"
+  },
+  {
+    "id": "us-sd",
+    "country": "US",
+    "code": "SD",
+    "name": "South Dakota",
+    "status": "pending"
+  },
+  {
+    "id": "us-tn",
+    "country": "US",
+    "code": "TN",
+    "name": "Tennessee",
+    "status": "pending"
+  },
+  {
+    "id": "us-tx",
+    "country": "US",
+    "code": "TX",
+    "name": "Texas",
+    "status": "pending"
+  },
+  {
+    "id": "us-ut",
+    "country": "US",
+    "code": "UT",
+    "name": "Utah",
+    "status": "pending"
+  },
+  {
+    "id": "us-vt",
+    "country": "US",
+    "code": "VT",
+    "name": "Vermont",
+    "status": "pending"
+  },
+  {
+    "id": "us-va",
+    "country": "US",
+    "code": "VA",
+    "name": "Virginia",
+    "status": "pending"
+  },
+  {
+    "id": "us-wa",
+    "country": "US",
+    "code": "WA",
+    "name": "Washington",
+    "status": "pending"
+  },
+  {
+    "id": "us-wv",
+    "country": "US",
+    "code": "WV",
+    "name": "West Virginia",
+    "status": "pending"
+  },
+  {
+    "id": "us-wi",
+    "country": "US",
+    "code": "WI",
+    "name": "Wisconsin",
+    "status": "pending"
+  },
+  {
+    "id": "us-wy",
+    "country": "US",
+    "code": "WY",
+    "name": "Wyoming",
+    "status": "pending"
+  }
+]
