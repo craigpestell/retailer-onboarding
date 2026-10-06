@@ -15,19 +15,19 @@ export type Step = {
   body: string;
 };
 
-const STEPS_DIR = path.join(process.cwd(), "content", "bc");
+const cache = new Map<string, Step[]>();
 
-let cache: Step[] | null = null;
-
-export function getSteps(): Step[] {
-  if (cache) return cache;
-  cache = fs
-    .readdirSync(STEPS_DIR)
+export function getSteps(region: string): Step[] {
+  const cached = cache.get(region);
+  if (cached) return cached;
+  const dir = path.join(process.cwd(), "content", region);
+  const steps = fs
+    .readdirSync(dir)
     .filter((file) => file.endsWith(".md"))
     .sort()
     .map((file, index) => {
       const { data, content } = matter(
-        fs.readFileSync(path.join(STEPS_DIR, file), "utf8"),
+        fs.readFileSync(path.join(dir, file), "utf8"),
       );
       return {
         slug: file.replace(/^\d+-/, "").replace(/\.md$/, ""),
@@ -42,9 +42,10 @@ export function getSteps(): Step[] {
         body: content,
       };
     });
-  return cache;
+  cache.set(region, steps);
+  return steps;
 }
 
-export function getStep(slug: string): Step | undefined {
-  return getSteps().find((step) => step.slug === slug);
+export function getStep(region: string, slug: string): Step | undefined {
+  return getSteps(region).find((step) => step.slug === slug);
 }

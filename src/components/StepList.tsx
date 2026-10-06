@@ -12,7 +12,13 @@ export type StepSummary = {
   itemCount: number;
 };
 
-export function StepList({ steps }: { steps: StepSummary[] }) {
+export function StepList({
+  region,
+  steps,
+}: {
+  region: string;
+  steps: StepSummary[];
+}) {
   const { done, reset, status } = useProgress();
 
   const total = steps.reduce((sum, step) => sum + step.itemCount, 0);
@@ -20,7 +26,7 @@ export function StepList({ steps }: { steps: StepSummary[] }) {
     (sum, step) =>
       sum +
       Array.from({ length: step.itemCount }, (_, i) =>
-        done.has(itemId(step.slug, i)),
+        done.has(itemId(region, step.slug, i)),
       ).filter(Boolean).length,
     0,
   );
@@ -53,13 +59,13 @@ export function StepList({ steps }: { steps: StepSummary[] }) {
       <ol className="space-y-3">
         {steps.map((step) => {
           const stepDone = Array.from({ length: step.itemCount }, (_, i) =>
-            done.has(itemId(step.slug, i)),
+            done.has(itemId(region, step.slug, i)),
           ).filter(Boolean).length;
           const complete = stepDone === step.itemCount;
           return (
             <li key={step.slug}>
               <Link
-                href={`/steps/${step.slug}`}
+                href={`/${region}/steps/${step.slug}`}
                 className="flex items-start gap-4 rounded-xl border border-neutral-200 p-4 transition hover:border-emerald-600 dark:border-neutral-800"
               >
                 <span

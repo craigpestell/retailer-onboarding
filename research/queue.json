@@ -47,7 +47,10 @@
     "country": "CA",
     "code": "ON",
     "name": "Ontario",
-    "status": "pending"
+    "status": "done",
+    "researchedAt": "2026-10-06",
+    "confidence": "medium",
+    "note": "Published as content/on; see research/jurisdictions/ca-on.md for sources and unconfirmed items"
   },
   {
     "id": "ca-pe",

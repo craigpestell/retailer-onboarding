@@ -3,13 +3,21 @@
 import { track } from "@vercel/analytics";
 import { itemId, useProgress } from "@/lib/progress";
 
-export function Checklist({ slug, items }: { slug: string; items: string[] }) {
+export function Checklist({
+  region,
+  slug,
+  items,
+}: {
+  region: string;
+  slug: string;
+  items: string[];
+}) {
   const { done, toggle } = useProgress();
 
   return (
     <ul className="space-y-2">
       {items.map((item, index) => {
-        const id = itemId(slug, index);
+        const id = itemId(region, slug, index);
         const checked = done.has(id);
         return (
           <li key={id}>
@@ -18,7 +26,7 @@ export function Checklist({ slug, items }: { slug: string; items: string[] }) {
                 type="checkbox"
                 checked={checked}
                 onChange={() => {
-                  if (!checked) track("task_completed", { step: slug });
+                  if (!checked) track("task_completed", { region, step: slug });
                   toggle(id);
                 }}
                 className="mt-1 h-4 w-4 accent-emerald-600"

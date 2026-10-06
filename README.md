@@ -11,7 +11,11 @@ Optional account (magic-link email login): progress saved to Postgres and synced
 
 ## Edit the content
 
-Each step is a Markdown file in `content/bc/`, ordered by filename prefix (`01-…`, `02-…`).
+Each region has a folder of steps, `content/<code>/` (`bc`, `on`, …). The home page lists every province, territory and state from `research/queue.json`; a region becomes a live guide as soon as its `content/<code>/` folder exists, and stays "coming soon" until then. Routes are `/<code>` and `/<code>/steps/<slug>`.
+
+To add a region: review `research/jurisdictions/<id>.md` (written by the `jurisdiction-researcher` agent), write the steps into `content/<code>/`, and mark it `done` in the queue. Checklist ticks for BC keep their original unprefixed ids (`pst:2`); other regions are prefixed (`on:hst:1`). The business details page and step screenshots are BC-only for now.
+
+Each step is a Markdown file, ordered by filename prefix (`01-…`, `02-…`).
 Frontmatter: `title`, `summary`, `time`, `cost`, optional `linkLabel`/`linkUrl`, and `checklist` (list of tasks).
 The body is Markdown. Reordering or editing checklist items resets those items' saved ticks, because progress is keyed by step slug and item position.
 
