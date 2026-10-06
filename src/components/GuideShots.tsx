@@ -7,17 +7,15 @@ import type { GuideShot } from "@/lib/guides";
 const REPORT_EMAIL =
   process.env.NEXT_PUBLIC_REPORT_EMAIL ?? "report@bizrocket.ca";
 
-function reportHref(stepTitle: string, shot: GuideShot) {
+function reportHref(stepTitle: string, capturedAt: string) {
   const subject = `Guide problem: ${stepTitle}`;
   const body = [
-    "What's different on the real site?",
+    "What's different on the real site? (Which screenshot or instruction?)",
     "",
     "",
     "---",
     `Step: ${stepTitle}`,
-    `Screenshot: ${shot.caption}`,
-    `Captured: ${shot.capturedAt}`,
-    `Page: ${shot.url}`,
+    `Screenshots captured: ${capturedAt}`,
   ].join("\n");
   return `mailto:${REPORT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
@@ -31,6 +29,8 @@ export function GuideShots({
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   if (shots.length === 0) return null;
+  // Oldest capture, so the date never overstates how fresh the guide is.
+  const capturedAt = shots.map((s) => s.capturedAt).sort()[0];
 
   return (
     <>
@@ -84,21 +84,21 @@ export function GuideShots({
                 />
                 <figcaption className="mt-2 text-sm">
                   <span className="font-medium">{i + 1}.</span> {shot.caption}
-                  <span className="block text-xs text-neutral-500">
-                    Captured {shot.capturedAt}
-                    {" · "}
-                    <a
-                      href={reportHref(stepTitle, shot)}
-                      className="underline hover:text-neutral-800 dark:hover:text-neutral-200"
-                    >
-                      Report a problem
-                    </a>
-                  </span>
                 </figcaption>
               </figure>
             </li>
           ))}
         </ol>
+
+        <p className="border-t border-neutral-200 px-5 py-4 text-xs text-neutral-500 dark:border-neutral-800">
+          Screenshots captured {capturedAt}.{" "}
+          <a
+            href={reportHref(stepTitle, capturedAt)}
+            className="underline hover:text-neutral-800 dark:hover:text-neutral-200"
+          >
+            See something different? Report a problem
+          </a>
+        </p>
       </dialog>
     </>
   );
