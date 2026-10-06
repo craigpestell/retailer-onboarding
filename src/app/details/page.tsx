@@ -11,7 +11,8 @@ export default function DetailsPage() {
   const { status } = useProgress();
   const [profile, setProfile] = useState<Profile>({});
   const [loaded, setLoaded] = useState(false);
-  const [saved, setSaved] = useState<Saved>("idle");
+  const [fieldStatus, setFieldStatus] = useState<Record<string, Saved>>({});
+  const dirty = useRef(new Set<string>());
   const latest = useRef<Profile | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
@@ -77,8 +78,16 @@ export default function DetailsPage() {
     );
   }
 
-  async function save(next: Profile) {
-    setSaved("saving");
+  function mark(keys: Iterable<string>, value: Saved) {
+    setFieldStatus((prev) => {
+      const next = { ...prev };
+      for (const k of keys) next[k] = value;
+      return next;
+    });
+  }
+
+  async function save(next: Profile, keys: string[]) {
+    mark(keys, "saving");
     try {
       const res = await fetch("/api/profile", {
         method: "PUT",
@@ -86,9 +95,9 @@ export default function DetailsPage() {
         body: JSON.stringify({ profile: next }),
         keepalive: true,
       });
-      setSaved(res.ok ? "saved" : "error");
+      mark(keys, res.ok ? "saved" : "error");
     } catch {
-      setSaved("error");
+      mark(keys, "error");
     }
   }
 
@@ -96,8 +105,9 @@ export default function DetailsPage() {
   function change(key: string, value: string) {
     const next = { ...profile, [key]: value };
     setProfile(next);
-    setSaved("idle");
+    mark([key], "idle");
     latest.current = next;
+    dirty.current.add(key);
     clearTimeout(timer.current);
     timer.current = setTimeout(flush, 800);
   }
@@ -105,8 +115,10 @@ export default function DetailsPage() {
   function flush() {
     clearTimeout(timer.current);
     const next = latest.current;
+    const keys = [...dirty.current];
     latest.current = null;
-    if (next) void save(next);
+    dirty.current.clear();
+    if (next) void save(next, keys);
   }
 
   function download() {
@@ -151,6 +163,21 @@ export default function DetailsPage() {
                   {f.hint && (
                     <span className="mt-1 block text-neutral-500">{f.hint}</span>
                   )}
+                  <span
+                    role="status"
+                    className={`mt-1 block min-h-5 ${
+                      fieldStatus[f.key] === "error"
+                        ? "text-red-600"
+                        : fieldStatus[f.key] === "saved"
+                          ? "text-emerald-700 dark:text-emerald-500"
+                          : "text-neutral-500"
+                    }`}
+                  >
+                    {fieldStatus[f.key] === "saving" && "Saving…"}
+                    {fieldStatus[f.key] === "saved" && "✓ Saved"}
+                    {fieldStatus[f.key] === "error" &&
+                      "Couldn't save. Check your connection and try again."}
+                  </span>
                 </label>
               ))}
             </div>
@@ -165,11 +192,6 @@ export default function DetailsPage() {
           >
             Download JSON
           </button>
-          <span role="status" className="text-sm text-neutral-500">
-            {saved === "saving" && "Saving…"}
-            {saved === "saved" && "All changes saved."}
-            {saved === "error" && "Couldn't save. Check your connection and keep typing to retry."}
-          </span>
         </div>
       </form>
     </div>
