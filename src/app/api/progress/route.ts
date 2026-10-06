@@ -50,8 +50,10 @@ export async function POST(request: Request) {
       .delete(progress)
       .where(and(eq(progress.userId, user.id), eq(progress.itemId, body.id)));
   }
+  // Usage stats must never break saving progress.
   await db
     .insert(checklistEvents)
-    .values({ userId: user.id, itemId: body.id, done: body.done });
+    .values({ userId: user.id, itemId: body.id, done: body.done })
+    .catch((error) => console.error("checklist event not recorded", error));
   return Response.json({ ok: true });
 }
