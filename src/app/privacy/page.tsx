@@ -22,9 +22,11 @@ export default function PrivacyPage() {
       <p>We store:</p>
       <ul>
         <li>your email address</li>
+        <li>which checklist tasks you have ticked, and when</li>
         <li>
-          which checklist tasks you have ticked, and when (no business numbers,
-          names or other details are stored)
+          only if you choose to fill in the &quot;Your business details&quot;
+          page: the business name, address and registration or tax numbers you
+          enter there. This is optional, and only you can see it.
         </li>
         <li>
           a session so you stay signed in (30 days), and short-lived sign-in

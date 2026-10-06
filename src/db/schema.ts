@@ -1,5 +1,6 @@
 import {
   index,
+  jsonb,
   pgTable,
   primaryKey,
   text,
@@ -36,6 +37,15 @@ export const sessions = pgTable("sessions", {
     .references(() => users.id, { onDelete: "cascade" }),
   expiresAt: timestamp("expires_at").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// The details a user collects along the way (names, tax numbers). One row per user.
+export const businessProfiles = pgTable("business_profiles", {
+  userId: uuid("user_id")
+    .primaryKey()
+    .references(() => users.id, { onDelete: "cascade" }),
+  data: jsonb("data").$type<Record<string, string>>().notNull().default({}),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
 // One row per ticked checklist item, e.g. itemId "pst:2".
