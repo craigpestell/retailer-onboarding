@@ -28,7 +28,7 @@ await captureStep("on", "03-business-number", [
       await page.goto(BN);
       await page
         .getByRole("heading", { name: "Register for a BN and program accounts" })
-        .scrollIntoViewIfNeeded();
+        .evaluate((el) => el.scrollIntoView({ block: "center" }));
     },
     highlight: (page) => [
       page.getByRole("heading", { name: "Register for a BN and program accounts" }),
