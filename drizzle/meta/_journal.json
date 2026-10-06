@@ -15,6 +15,13 @@
       "when": 1791267460103,
       "tag": "0001_right_barracuda",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791286047769,
+      "tag": "0002_checklist_events",
+      "breakpoints": true
     }
   ]
 }

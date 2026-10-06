@@ -1,6 +1,5 @@
 "use client";
 
-import { track } from "@vercel/analytics";
 import { itemId, useProgress } from "@/lib/progress";
 
 export function Checklist({
@@ -25,10 +24,7 @@ export function Checklist({
               <input
                 type="checkbox"
                 checked={checked}
-                onChange={() => {
-                  if (!checked) track("task_completed", { region, step: slug });
-                  toggle(id);
-                }}
+                onChange={() => toggle(id)}
                 className="mt-1 h-4 w-4 accent-emerald-600"
               />
               <span className={checked ? "text-neutral-500 line-through" : ""}>
