@@ -88,5 +88,86 @@
     "alt": "eTaxBC log on page with the Enrol now option highlighted",
     "caption": "On the eTaxBC home page, use Enrol now to create an eTaxBC profile. You'll register for PST from inside your profile.",
     "capturedAt": "2026-10-06"
+  },
+  {
+    "region": "on",
+    "step": "01-structure-and-name",
+    "file": "guides/on/01-structure-and-name/01.webp",
+    "url": "https://www.ontario.ca/page/business/start/decide-ownership-structure",
+    "alt": "Ontario page on choosing an ownership structure with the sole proprietorship section highlighted",
+    "caption": "Read Ontario's guide to ownership structures. A sole proprietorship is the simplest way to start, but you are personally liable for the business.",
+    "capturedAt": "2026-10-06"
+  },
+  {
+    "region": "on",
+    "step": "01-structure-and-name",
+    "file": "guides/on/01-structure-and-name/02.webp",
+    "url": "https://www.ontario.ca/page/ontario-business-registry",
+    "alt": "Ontario Business Registry page with the search link highlighted",
+    "caption": "Search the Ontario Business Registry to check that no one else is already using the name you want.",
+    "capturedAt": "2026-10-06"
+  },
+  {
+    "region": "on",
+    "step": "02-register-business",
+    "file": "guides/on/02-register-business/01.webp",
+    "url": "https://www.ontario.ca/page/business/start/register-your-business-online",
+    "alt": "Ontario register your business online page with the email and card requirement and the sole proprietorship fee highlighted",
+    "caption": "Check what you need before you start: a working email address and a debit or credit card. You create an Ontario.ca Login and an Ontario Business Account during set-up, and a sole proprietorship costs $60.",
+    "capturedAt": "2026-10-06"
+  },
+  {
+    "region": "on",
+    "step": "02-register-business",
+    "file": "guides/on/02-register-business/02.webp",
+    "url": "https://www.ontario.ca/page/cost-time-required-to-register-change-search-for-business-name-corporation-not-for-profit",
+    "alt": "Ontario page listing registration fees with the sole proprietorship new registration fee highlighted",
+    "caption": "Registering a sole proprietorship online costs $60 and takes effect immediately. Renewing it every five years costs the same $60.",
+    "capturedAt": "2026-10-06"
+  },
+  {
+    "region": "on",
+    "step": "03-business-number",
+    "file": "guides/on/03-business-number/01.webp",
+    "url": "https://www.canada.ca/en/services/taxes/business-registration.html",
+    "alt": "CRA business registration page with the Register with Business Registration Online link highlighted",
+    "caption": "On the CRA business registration page, choose Register with Business Registration Online (BRO).",
+    "capturedAt": "2026-10-06"
+  },
+  {
+    "region": "on",
+    "step": "03-business-number",
+    "file": "guides/on/03-business-number/02.webp",
+    "url": "https://www.canada.ca/en/services/taxes/business-registration.html",
+    "alt": "CRA page listing ways to register for a business number and program accounts",
+    "caption": "This section explains what a business number covers and which program accounts (like GST/HST) you can add to it.",
+    "capturedAt": "2026-10-06"
+  },
+  {
+    "region": "on",
+    "step": "04-hst",
+    "file": "guides/on/04-hst/01.webp",
+    "url": "https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/gst-hst-businesses.html",
+    "alt": "CRA GST/HST for businesses page with the Who needs to register section highlighted",
+    "caption": "Check Who needs to register for GST/HST. Most businesses must register once taxable sales pass $30,000 in four consecutive calendar quarters.",
+    "capturedAt": "2026-10-06"
+  },
+  {
+    "region": "on",
+    "step": "04-hst",
+    "file": "guides/on/04-hst/02.webp",
+    "url": "https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/gst-hst-businesses.html",
+    "alt": "CRA GST/HST for businesses page with the Get a GST/HST number and manage your account section highlighted",
+    "caption": "When you're ready, open Get a GST/HST number and manage your account. Registration is done in Business Registration Online, signed in with your CRA account.",
+    "capturedAt": "2026-10-06"
+  },
+  {
+    "region": "on",
+    "step": "05-municipal-licence",
+    "file": "guides/on/05-municipal-licence/01.webp",
+    "url": "https://www.toronto.ca/business-economy/new-businesses-startups/business-regulations/",
+    "alt": "City of Toronto business regulations page with the list of businesses that do not need a licence open and the retail stores item highlighted",
+    "caption": "Each city sets its own rules. Toronto, for example, says retail stores selling new, non-food items do not need a municipal operating licence. Look up your own city or town's licensing page in the same way.",
+    "capturedAt": "2026-10-06"
   }
 ]
