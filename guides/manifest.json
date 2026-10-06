@@ -1,0 +1,26 @@
+[
+  {
+    "step": "02-register-business",
+    "file": "guides/02-register-business/01.webp",
+    "url": "https://www.bcregistry.gov.bc.ca/en-CA/",
+    "alt": "BC Registries and Online Services home page with the Create Account button highlighted",
+    "caption": "Start at the BC Registries home page and choose Create Account.",
+    "capturedAt": "2026-10-06"
+  },
+  {
+    "step": "02-register-business",
+    "file": "guides/02-register-business/02.webp",
+    "url": "https://www.account.bcregistry.gov.bc.ca/choose-authentication-method",
+    "alt": "Create account page offering sign-in with BC Services Card",
+    "caption": "Accounts are created with a BC Services Card. Have it set up before you start.",
+    "capturedAt": "2026-10-06"
+  },
+  {
+    "step": "02-register-business",
+    "file": "guides/02-register-business/03.webp",
+    "url": "https://www.names.bcregistry.gov.bc.ca/",
+    "alt": "Name Request page with the action selector",
+    "caption": "Check and reserve your business name with Name Request before registering.",
+    "capturedAt": "2026-10-06"
+  }
+]

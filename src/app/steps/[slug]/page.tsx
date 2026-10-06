@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Markdown from "react-markdown";
 import { Checklist } from "@/components/Checklist";
+import { GuideShots } from "@/components/GuideShots";
+import { getGuideShots } from "@/lib/guides";
 import { getStep, getSteps } from "@/lib/steps";
 
 export function generateStaticParams() {
@@ -72,6 +74,8 @@ export default async function StepPage(props: PageProps<"/steps/[slug]">) {
       <div className="prose prose-neutral mt-8 max-w-none dark:prose-invert">
         <Markdown>{step.body}</Markdown>
       </div>
+
+      <GuideShots stepTitle={step.title} shots={getGuideShots(step.slug)} />
 
       <section className="mt-10">
         <h2 className="mb-3 text-lg font-semibold">Your checklist</h2>
