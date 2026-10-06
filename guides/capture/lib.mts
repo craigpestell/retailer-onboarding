@@ -49,8 +49,9 @@ async function annotate(page: Page, targets: Locator[]) {
         badge.textContent = label;
         Object.assign(badge.style, {
           position: "absolute",
-          left: "-14px",
-          top: "-14px",
+          // Keep the badge on screen when the target touches an edge.
+          left: box.x < 24 ? "2px" : "-14px",
+          top: box.y < 24 ? "2px" : "-14px",
           width: "24px",
           height: "24px",
           borderRadius: "50%",

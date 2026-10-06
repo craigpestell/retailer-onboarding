@@ -4,7 +4,7 @@ summary: The federal number that your tax accounts attach to.
 time: 20–30 minutes
 cost: Free
 linkLabel: Canada Revenue Agency — businesses
-linkUrl: https://www.canada.ca/en/revenue-agency/services/tax/businesses.html
+linkUrl: https://www.canada.ca/en/services/taxes/business-registration.html
 checklist:
   - Check whether BC Registry offered a Business Number during registration
   - If not, register for a Business Number with the Canada Revenue Agency

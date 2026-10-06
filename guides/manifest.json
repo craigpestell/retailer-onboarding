@@ -1,5 +1,21 @@
 [
   {
+    "step": "01-structure-and-name",
+    "file": "guides/01-structure-and-name/01.webp",
+    "url": "https://www.names.bcregistry.gov.bc.ca/",
+    "alt": "Name Request page with the action selector for starting a new business name",
+    "caption": "Open Name Request and choose the action that matches what you're doing. For a new business, pick the option to get a business name.",
+    "capturedAt": "2026-10-06"
+  },
+  {
+    "step": "01-structure-and-name",
+    "file": "guides/01-structure-and-name/02.webp",
+    "url": "https://www.names.bcregistry.gov.bc.ca/",
+    "alt": "Name Request page with the How to Build Your Name guidance",
+    "caption": "Read How to Build Your Name before you type anything. A name needs a distinctive part and a description, and it must not clash with an existing name.",
+    "capturedAt": "2026-10-06"
+  },
+  {
     "step": "02-register-business",
     "file": "guides/02-register-business/01.webp",
     "url": "https://www.bcregistry.gov.bc.ca/en-CA/",
@@ -21,6 +37,46 @@
     "url": "https://www.names.bcregistry.gov.bc.ca/",
     "alt": "Name Request page with the action selector",
     "caption": "Check and reserve your business name with Name Request before registering.",
+    "capturedAt": "2026-10-06"
+  },
+  {
+    "step": "03-business-number",
+    "file": "guides/03-business-number/01.webp",
+    "url": "https://www.canada.ca/en/services/taxes/business-registration.html",
+    "alt": "CRA business registration page with the Register with Business Registration Online link highlighted",
+    "caption": "On the CRA business registration page, choose Register with Business Registration Online (BRO).",
+    "capturedAt": "2026-10-06"
+  },
+  {
+    "step": "03-business-number",
+    "file": "guides/03-business-number/02.webp",
+    "url": "https://www.canada.ca/en/services/taxes/business-registration.html",
+    "alt": "CRA page listing ways to register for a business number and program accounts",
+    "caption": "This section explains what a business number covers and which program accounts (like GST/HST) you can add to it.",
+    "capturedAt": "2026-10-06"
+  },
+  {
+    "step": "04-gst",
+    "file": "guides/04-gst/01.webp",
+    "url": "https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/gst-hst-businesses.html",
+    "alt": "CRA GST/HST for businesses page with the Who needs to register section highlighted",
+    "caption": "Check Who needs to register for GST/HST. Most businesses must register once taxable sales pass $30,000 in four consecutive calendar quarters.",
+    "capturedAt": "2026-10-06"
+  },
+  {
+    "step": "04-gst",
+    "file": "guides/04-gst/02.webp",
+    "url": "https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/gst-hst-businesses.html",
+    "alt": "CRA GST/HST for businesses page with the Get a GST/HST number and manage your account section highlighted",
+    "caption": "When you're ready, open Get a GST/HST number and manage your account. Registration is done in Business Registration Online, signed in with your CRA account.",
+    "capturedAt": "2026-10-06"
+  },
+  {
+    "step": "05-pst",
+    "file": "guides/05-pst/01.webp",
+    "url": "https://www.etax.gov.bc.ca/btp/eservices/_/",
+    "alt": "eTaxBC log on page with the Enrol now option highlighted",
+    "caption": "On the eTaxBC home page, use Enrol now to create an eTaxBC profile. You'll register for PST from inside your profile.",
     "capturedAt": "2026-10-06"
   }
 ]

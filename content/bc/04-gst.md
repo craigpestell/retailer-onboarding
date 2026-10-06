@@ -4,7 +4,7 @@ summary: Collect GST from customers and claim back the GST you pay on stock.
 time: 30 minutes
 cost: Free
 linkLabel: CRA — GST/HST for businesses
-linkUrl: https://www.canada.ca/en/revenue-agency/services/tax/businesses.html
+linkUrl: https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/gst-hst-businesses.html
 checklist:
   - Decide whether to register voluntarily from the start (recommended)
   - Register for a GST/HST account in My Business Account
