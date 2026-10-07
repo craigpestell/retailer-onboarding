@@ -4,7 +4,11 @@
     "country": "CA",
     "code": "AB",
     "name": "Alberta",
-    "status": "pending"
+    "status": "done",
+    "researchedAt": "2026-10-07",
+    "confidence": "medium",
+    "publishedAt": "2026-10-07",
+    "note": "Published as content/ab; see research/jurisdictions/ca-ab.md for sources and unconfirmed items"
   },
   {
     "id": "ca-bc",
