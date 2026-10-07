@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { desc, eq, gt, sql } from "drizzle-orm";
+import { and, desc, eq, gt, sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import { checklistEvents, progress, users } from "@/db/schema";
 import { getSessionUser, isAdmin } from "@/lib/auth";
@@ -31,8 +32,13 @@ export const metadata: Metadata = {
   robots: { index: false },
 };
 
-export default async function AdminPage() {
+export default async function AdminPage(props: PageProps<"/admin">) {
   if (!isAdmin(await getSessionUser())) notFound();
+
+  const regions = getAvailableRegions();
+  const { region: regionParam } = await props.searchParams;
+  const region = regions.find((r) => r.slug === regionParam);
+  const inRegion = region ? eq(checklistEvents.region, region.slug) : undefined;
 
   const total = validItemIds().size;
   const rows = await getDb()
@@ -55,7 +61,9 @@ export default async function AdminPage() {
       signedIn: sql<number>`count(*) filter (where ${checklistEvents.done} and ${checklistEvents.userId} is not null)::int`,
     })
     .from(checklistEvents)
-    .where(gt(checklistEvents.createdAt, sql`now() - interval '30 days'`))
+    .where(
+      and(gt(checklistEvents.createdAt, sql`now() - interval '30 days'`), inRegion),
+    )
     .groupBy(checklistEvents.itemId)
     .orderBy(desc(sql`count(*) filter (where ${checklistEvents.done})`));
   const recent = await getDb()
@@ -63,11 +71,13 @@ export default async function AdminPage() {
       id: checklistEvents.id,
       itemId: checklistEvents.itemId,
       done: checklistEvents.done,
+      region: checklistEvents.region,
       createdAt: checklistEvents.createdAt,
       email: users.email,
     })
     .from(checklistEvents)
     .leftJoin(users, eq(users.id, checklistEvents.userId))
+    .where(inRegion)
     .orderBy(desc(checklistEvents.createdAt))
     .limit(50);
   const labels = itemLabels();
@@ -117,6 +127,25 @@ export default async function AdminPage() {
       <p className="mt-1 text-sm text-neutral-500">
         Every tick and untick, from signed-in users and anonymous visitors.
       </p>
+      <nav aria-label="Filter by region" className="mt-4 flex flex-wrap gap-2 text-sm">
+        {[{ slug: "", name: "All regions" }, ...regions].map((r) => {
+          const active = (region?.slug ?? "") === r.slug;
+          return (
+            <Link
+              key={r.slug || "all"}
+              href={r.slug ? `/admin?region=${r.slug}` : "/admin"}
+              aria-current={active ? "page" : undefined}
+              className={`rounded-full border px-3 py-1 ${
+                active
+                  ? "border-emerald-600 bg-emerald-600 text-white"
+                  : "border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-900"
+              }`}
+            >
+              {r.name}
+            </Link>
+          );
+        })}
+      </nav>
       <div className="mt-6 overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead className="text-neutral-500">
@@ -151,7 +180,9 @@ export default async function AdminPage() {
         </table>
       </div>
 
-      <h2 className="mt-12 text-xl font-bold tracking-tight">Latest events</h2>
+      <h2 className="mt-12 text-xl font-bold tracking-tight">
+        Latest events{region ? ` in ${region.name}` : ""}
+      </h2>
       <div className="mt-6 overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead className="text-neutral-500">
@@ -159,6 +190,7 @@ export default async function AdminPage() {
               <th className="py-2 pr-4 font-medium">When (UTC)</th>
               <th className="py-2 pr-4 font-medium">Who</th>
               <th className="py-2 pr-4 font-medium">Action</th>
+              <th className="py-2 pr-4 font-medium">Region</th>
               <th className="py-2 font-medium">Task</th>
             </tr>
           </thead>
@@ -175,6 +207,9 @@ export default async function AdminPage() {
                   </td>
                   <td className="py-2 pr-4">{row.email ?? "anonymous"}</td>
                   <td className="py-2 pr-4">{row.done ? "ticked" : "unticked"}</td>
+                  <td className="py-2 pr-4">
+                    {regions.find((r) => r.slug === row.region)?.name ?? row.region}
+                  </td>
                   <td className="py-2">
                     {l.item}
                     <span className="text-neutral-500"> · {l.step}</span>

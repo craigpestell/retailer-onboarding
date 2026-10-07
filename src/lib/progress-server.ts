@@ -11,3 +11,9 @@ export function validItemIds(): Set<string> {
   }
   return ids;
 }
+
+/** Region slug of a checklist item id: "on:hst:1" → "on", "pst:2" → "bc". */
+export function regionOfItem(itemId: string): string {
+  const parts = itemId.split(":");
+  return parts.length === 3 ? parts[0] : "bc";
+}

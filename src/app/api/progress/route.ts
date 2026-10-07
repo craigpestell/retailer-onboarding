@@ -2,7 +2,7 @@ import { and, eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { checklistEvents, progress } from "@/db/schema";
 import { getSessionUser } from "@/lib/auth";
-import { validItemIds } from "@/lib/progress-server";
+import { regionOfItem, validItemIds } from "@/lib/progress-server";
 import { isSameOrigin } from "@/lib/request-guard";
 
 export async function GET() {
@@ -53,7 +53,12 @@ export async function POST(request: Request) {
   // Usage stats must never break saving progress.
   await db
     .insert(checklistEvents)
-    .values({ userId: user.id, itemId: body.id, done: body.done })
+    .values({
+      userId: user.id,
+      itemId: body.id,
+      region: regionOfItem(body.id),
+      done: body.done,
+    })
     .catch((error) => console.error("checklist event not recorded", error));
   return Response.json({ ok: true });
 }
