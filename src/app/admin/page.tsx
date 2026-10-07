@@ -58,9 +58,6 @@ export default async function AdminPage(props: PageProps<"/admin">) {
     const qs = query.toString();
     return qs ? `/admin?${qs}` : "/admin";
   };
-  const [{ eventCount }] = await getDb()
-    .select({ eventCount: sql<number>`count(*)::int` })
-    .from(checklistEvents);
 
   const total = validItemIds().size;
   const rows = await getDb()
@@ -75,33 +72,50 @@ export default async function AdminPage(props: PageProps<"/admin">) {
     .groupBy(users.id)
     .orderBy(desc(users.createdAt));
 
-  const itemStats = await getDb()
-    .select({
-      itemId: checklistEvents.itemId,
-      ticks: sql<number>`count(*) filter (where ${checklistEvents.done})::int`,
-      unticks: sql<number>`count(*) filter (where not ${checklistEvents.done})::int`,
-      signedIn: sql<number>`count(*) filter (where ${checklistEvents.done} and ${checklistEvents.userId} is not null)::int`,
-    })
-    .from(checklistEvents)
-    .where(
-      and(gt(checklistEvents.createdAt, sql`now() - interval '30 days'`), filter),
-    )
-    .groupBy(checklistEvents.itemId)
-    .orderBy(desc(sql`count(*) filter (where ${checklistEvents.done})`));
-  const recent = await getDb()
-    .select({
-      id: checklistEvents.id,
-      itemId: checklistEvents.itemId,
-      done: checklistEvents.done,
-      region: checklistEvents.region,
-      createdAt: checklistEvents.createdAt,
-      email: users.email,
-    })
-    .from(checklistEvents)
-    .leftJoin(users, eq(users.id, checklistEvents.userId))
-    .where(filter)
-    .orderBy(desc(checklistEvents.createdAt))
-    .limit(50);
+  // Event queries are isolated so a database that's missing a migration still
+  // renders the user list, with a notice instead of a 500.
+  const loadEvents = async () => {
+    const db = getDb();
+    const [[{ eventCount }], itemStats, recent] = await Promise.all([
+      db
+        .select({ eventCount: sql<number>`count(*)::int` })
+        .from(checklistEvents),
+      db
+        .select({
+          itemId: checklistEvents.itemId,
+          ticks: sql<number>`count(*) filter (where ${checklistEvents.done})::int`,
+          unticks: sql<number>`count(*) filter (where not ${checklistEvents.done})::int`,
+          signedIn: sql<number>`count(*) filter (where ${checklistEvents.done} and ${checklistEvents.userId} is not null)::int`,
+        })
+        .from(checklistEvents)
+        .where(
+          and(gt(checklistEvents.createdAt, sql`now() - interval '30 days'`), filter),
+        )
+        .groupBy(checklistEvents.itemId)
+        .orderBy(desc(sql`count(*) filter (where ${checklistEvents.done})`)),
+      db
+        .select({
+          id: checklistEvents.id,
+          itemId: checklistEvents.itemId,
+          done: checklistEvents.done,
+          region: checklistEvents.region,
+          createdAt: checklistEvents.createdAt,
+          email: users.email,
+        })
+        .from(checklistEvents)
+        .leftJoin(users, eq(users.id, checklistEvents.userId))
+        .where(filter)
+        .orderBy(desc(checklistEvents.createdAt))
+        .limit(50),
+    ]);
+    return { eventCount, itemStats, recent };
+  };
+  let events: Awaited<ReturnType<typeof loadEvents>> | null = null;
+  try {
+    events = await loadEvents();
+  } catch (error) {
+    console.error("admin: checklist events query failed", error);
+  }
   const labels = itemLabels();
   const label = (id: string) => labels.get(id) ?? { region: "", step: id, item: "(removed item)" };
 
@@ -143,145 +157,155 @@ export default async function AdminPage(props: PageProps<"/admin">) {
         </table>
       </div>
 
-      <h2 className="mt-12 text-xl font-bold tracking-tight">
-        Checklist activity (last 30 days)
-      </h2>
-      <p className="mt-1 text-sm text-neutral-500">
-        Every tick and untick, from signed-in users and anonymous visitors.
-      </p>
-      <nav aria-label="Filter by region" className="mt-4 flex flex-wrap gap-2 text-sm">
-        {[{ slug: "", name: "All regions" }, ...regions].map((r) => {
-          const active = (region?.slug ?? "") === r.slug;
-          return (
+      {events ? (
+        <>
+          <h2 className="mt-12 text-xl font-bold tracking-tight">
+            Checklist activity (last 30 days)
+          </h2>
+          <p className="mt-1 text-sm text-neutral-500">
+            Every tick and untick, from signed-in users and anonymous visitors.
+          </p>
+          <nav aria-label="Filter by region" className="mt-4 flex flex-wrap gap-2 text-sm">
+            {[{ slug: "", name: "All regions" }, ...regions].map((r) => {
+              const active = (region?.slug ?? "") === r.slug;
+              return (
+                <Link
+                  key={r.slug || "all"}
+                  href={adminHref({ region: r.slug || undefined })}
+                  aria-current={active ? "page" : undefined}
+                  className={`rounded-full border px-3 py-1 ${
+                    active
+                      ? "border-emerald-600 bg-emerald-600 text-white"
+                      : "border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-900"
+                  }`}
+                >
+                  {r.name}
+                </Link>
+              );
+            })}
+          </nav>
+          <div className="mt-3 text-sm">
             <Link
-              key={r.slug || "all"}
-              href={adminHref({ region: r.slug || undefined })}
-              aria-current={active ? "page" : undefined}
-              className={`rounded-full border px-3 py-1 ${
-                active
-                  ? "border-emerald-600 bg-emerald-600 text-white"
-                  : "border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-900"
-              }`}
+              href={adminHref({ mine: hideMine ? undefined : "hide" })}
+              className="text-emerald-700 underline dark:text-emerald-400"
             >
-              {r.name}
+              {hideMine
+                ? `Showing everyone except ${admin.email}. Include my events`
+                : `Exclude my events (${admin.email})`}
             </Link>
-          );
-        })}
-      </nav>
-      <div className="mt-3 text-sm">
-        <Link
-          href={adminHref({ mine: hideMine ? undefined : "hide" })}
-          className="text-emerald-700 underline dark:text-emerald-400"
-        >
-          {hideMine
-            ? `Showing everyone except ${admin.email}. Include my events`
-            : `Exclude my events (${admin.email})`}
-        </Link>
-      </div>
-      <div className="mt-6 overflow-x-auto">
-        <table className="w-full text-left text-sm">
-          <thead className="text-neutral-500">
-            <tr>
-              <th className="py-2 pr-4 font-medium">Task</th>
-              <th className="py-2 pr-4 font-medium">Ticked</th>
-              <th className="py-2 pr-4 font-medium">Signed in</th>
-              <th className="py-2 font-medium">Unticked</th>
-            </tr>
-          </thead>
-          <tbody>
-            {itemStats.map((row) => {
-              const l = label(row.itemId);
-              return (
-                <tr
-                  key={row.itemId}
-                  className="border-t border-neutral-200 dark:border-neutral-800"
-                >
-                  <td className="py-2 pr-4">
-                    <div>{l.item}</div>
-                    <div className="text-xs text-neutral-500">
-                      {[l.region, l.step].filter(Boolean).join(" · ")}
-                    </div>
-                  </td>
-                  <td className="py-2 pr-4">{row.ticks}</td>
-                  <td className="py-2 pr-4">{row.signedIn}</td>
-                  <td className="py-2">{row.unticks}</td>
+          </div>
+          <div className="mt-6 overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead className="text-neutral-500">
+                <tr>
+                  <th className="py-2 pr-4 font-medium">Task</th>
+                  <th className="py-2 pr-4 font-medium">Ticked</th>
+                  <th className="py-2 pr-4 font-medium">Signed in</th>
+                  <th className="py-2 font-medium">Unticked</th>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+              </thead>
+              <tbody>
+                {events.itemStats.map((row) => {
+                  const l = label(row.itemId);
+                  return (
+                    <tr
+                      key={row.itemId}
+                      className="border-t border-neutral-200 dark:border-neutral-800"
+                    >
+                      <td className="py-2 pr-4">
+                        <div>{l.item}</div>
+                        <div className="text-xs text-neutral-500">
+                          {[l.region, l.step].filter(Boolean).join(" · ")}
+                        </div>
+                      </td>
+                      <td className="py-2 pr-4">{row.ticks}</td>
+                      <td className="py-2 pr-4">{row.signedIn}</td>
+                      <td className="py-2">{row.unticks}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
 
-      <h2 className="mt-12 text-xl font-bold tracking-tight">
-        Latest events{region ? ` in ${region.name}` : ""}
-      </h2>
-      <div className="mt-6 overflow-x-auto">
-        <table className="w-full text-left text-sm">
-          <thead className="text-neutral-500">
-            <tr>
-              <th className="py-2 pr-4 font-medium">When (UTC)</th>
-              <th className="py-2 pr-4 font-medium">Who</th>
-              <th className="py-2 pr-4 font-medium">Action</th>
-              <th className="py-2 pr-4 font-medium">Region</th>
-              <th className="py-2 font-medium">Task</th>
-            </tr>
-          </thead>
-          <tbody>
-            {recent.map((row) => {
-              const l = label(row.itemId);
-              return (
-                <tr
-                  key={row.id}
-                  className="border-t border-neutral-200 dark:border-neutral-800"
-                >
-                  <td className="py-2 pr-4 whitespace-nowrap">
-                    {new Date(row.createdAt).toISOString().slice(0, 16).replace("T", " ")}
-                  </td>
-                  <td className="py-2 pr-4">{row.email ?? "anonymous"}</td>
-                  <td className="py-2 pr-4">{row.done ? "ticked" : "unticked"}</td>
-                  <td className="py-2 pr-4">
-                    {regions.find((r) => r.slug === row.region)?.name ?? row.region}
-                  </td>
-                  <td className="py-2">
-                    {l.item}
-                    <span className="text-neutral-500"> · {l.step}</span>
-                  </td>
+          <h2 className="mt-12 text-xl font-bold tracking-tight">
+            Latest events{region ? ` in ${region.name}` : ""}
+          </h2>
+          <div className="mt-6 overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead className="text-neutral-500">
+                <tr>
+                  <th className="py-2 pr-4 font-medium">When (UTC)</th>
+                  <th className="py-2 pr-4 font-medium">Who</th>
+                  <th className="py-2 pr-4 font-medium">Action</th>
+                  <th className="py-2 pr-4 font-medium">Region</th>
+                  <th className="py-2 font-medium">Task</th>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+              </thead>
+              <tbody>
+                {events.recent.map((row) => {
+                  const l = label(row.itemId);
+                  return (
+                    <tr
+                      key={row.id}
+                      className="border-t border-neutral-200 dark:border-neutral-800"
+                    >
+                      <td className="py-2 pr-4 whitespace-nowrap">
+                        {new Date(row.createdAt).toISOString().slice(0, 16).replace("T", " ")}
+                      </td>
+                      <td className="py-2 pr-4">{row.email ?? "anonymous"}</td>
+                      <td className="py-2 pr-4">{row.done ? "ticked" : "unticked"}</td>
+                      <td className="py-2 pr-4">
+                        {regions.find((r) => r.slug === row.region)?.name ?? row.region}
+                      </td>
+                      <td className="py-2">
+                        {l.item}
+                        <span className="text-neutral-500"> · {l.step}</span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
 
-      <h2 className="mt-12 text-xl font-bold tracking-tight">Purge events</h2>
-      {purged ? (
-        <p className="mt-2 text-sm text-emerald-700 dark:text-emerald-400">
-          All events were deleted.
+          <h2 className="mt-12 text-xl font-bold tracking-tight">Purge events</h2>
+          {purged ? (
+            <p className="mt-2 text-sm text-emerald-700 dark:text-emerald-400">
+              All events were deleted.
+            </p>
+          ) : null}
+          <form action={purgeEvents} className="mt-3 space-y-3 text-sm">
+            <p className="text-neutral-500">
+              Permanently deletes all {events.eventCount} recorded events, for every
+              region and user. Ticked progress in accounts isn&apos;t affected.
+            </p>
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                name="confirm"
+                value="yes"
+                required
+                className="h-4 w-4 accent-red-600"
+              />
+              Yes, delete all {events.eventCount} events. This can&apos;t be undone.
+            </label>
+            <button
+              type="submit"
+              disabled={events.eventCount === 0}
+              className="rounded-lg bg-red-600 px-4 py-2 font-medium text-white hover:bg-red-700 disabled:opacity-50"
+            >
+              Purge all events
+            </button>
+          </form>
+        </>
+      ) : (
+        <p className="mt-12 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-200">
+          Checklist activity couldn&apos;t be loaded. The database is probably
+          missing a migration: run <code>npm run db:migrate</code> against it.
+          The server log has the exact error.
         </p>
-      ) : null}
-      <form action={purgeEvents} className="mt-3 space-y-3 text-sm">
-        <p className="text-neutral-500">
-          Permanently deletes all {eventCount} recorded events, for every
-          region and user. Ticked progress in accounts isn&apos;t affected.
-        </p>
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            name="confirm"
-            value="yes"
-            required
-            className="h-4 w-4 accent-red-600"
-          />
-          Yes, delete all {eventCount} events. This can&apos;t be undone.
-        </label>
-        <button
-          type="submit"
-          disabled={eventCount === 0}
-          className="rounded-lg bg-red-600 px-4 py-2 font-medium text-white hover:bg-red-700 disabled:opacity-50"
-        >
-          Purge all events
-        </button>
-      </form>
+      )}
     </div>
   );
 }
