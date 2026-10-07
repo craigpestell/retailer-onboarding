@@ -13,7 +13,15 @@ Optional account (magic-link email login): progress saved to Postgres and synced
 
 Each region has a folder of steps, `content/<code>/` (`bc`, `on`, …). The home page lists every province, territory and state from `research/queue.json`; a region becomes a live guide as soon as its `content/<code>/` folder exists, and stays "coming soon" until then. Routes are `/<code>` and `/<code>/steps/<slug>`.
 
-To add a region: review `research/jurisdictions/<id>.md` (written by the `jurisdiction-researcher` agent), write the steps into `content/<code>/`, and mark it `done` in the queue. Checklist ticks for BC keep their original unprefixed ids (`pst:2`); other regions are prefixed (`on:hst:1`). The business details page is BC-only for now.
+To add a region, run the three agents in `.claude/agents/` in order. Each commits on its own branch for you to review and merge:
+
+1. `jurisdiction-researcher` researches the next `pending` region from official sources into `research/jurisdictions/<id>.md` and marks it `researched`.
+2. `guide-editor` writes `content/<code>/` from that research in the house style, marks it `done`, and checks it. Ask it to "review" to audit every live guide for consistency instead.
+3. `guide-screenshotter` writes the region's capture scripts and checks each annotated image against its caption. Cloud sessions can't reach most government sites, so captures may need running locally.
+
+`npm run content:check` (optionally `-- <code>`) checks frontmatter, checklist style, numbering, step cross-references and the screenshot manifest.
+
+Checklist ticks for BC keep their original unprefixed ids (`pst:2`); other regions are prefixed (`on:hst:1`). The business details page is BC-only for now.
 
 Step screenshots are per region: capture scripts live in `guides/capture/<code>/`, images in `public/guides/<code>/<step>/`, and each `guides/manifest.json` entry carries a `region`. Run one with `npm run guides:capture guides/capture/<code>/<step>.mts`.
 
