@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Geist } from "next/font/google";
 import { AuthNav } from "@/components/AuthNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -63,6 +64,7 @@ export default function RootLayout({ children, modal }: LayoutProps<"/">) {
           </Link>
         </footer>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
