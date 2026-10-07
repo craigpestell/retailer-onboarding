@@ -1,6 +1,6 @@
 import { getDb } from "@/db";
 import { checklistEvents } from "@/db/schema";
-import { validItemIds } from "@/lib/progress-server";
+import { regionOfItem, validItemIds } from "@/lib/progress-server";
 import { isSameOrigin } from "@/lib/request-guard";
 
 /**
@@ -27,6 +27,6 @@ export async function POST(request: Request) {
 
   await getDb()
     .insert(checklistEvents)
-    .values({ itemId: body.id, done: body.done });
+    .values({ itemId: body.id, region: regionOfItem(body.id), done: body.done });
   return Response.json({ ok: true });
 }

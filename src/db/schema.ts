@@ -70,11 +70,14 @@ export const checklistEvents = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
     itemId: text("item_id").notNull(),
+    // Region slug ("bc", "on"), derived from itemId when the event is recorded.
+    region: text("region").notNull(),
     done: boolean("done").notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (t) => [
     index("checklist_events_created_idx").on(t.createdAt),
     index("checklist_events_item_idx").on(t.itemId),
+    index("checklist_events_region_idx").on(t.region, t.createdAt),
   ],
 );
