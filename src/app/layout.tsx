@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Analytics } from "@vercel/analytics/next";
 import { Geist } from "next/font/google";
@@ -34,7 +35,14 @@ export default function RootLayout({ children, modal }: LayoutProps<"/">) {
       <body className="flex min-h-full flex-col">
         <header className="border-b border-neutral-200 dark:border-neutral-800">
           <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-4">
-            <Link href="/" className="font-semibold">
+            <Link href="/" className="flex items-center gap-2 font-semibold">
+              <Image
+                src="/logo.svg"
+                alt=""
+                width={28}
+                height={28}
+                unoptimized
+              />
               Start Your Store
             </Link>
             <div className="flex items-center gap-3">
