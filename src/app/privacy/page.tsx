@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = { title: "Privacy · Start Your Store" };
 
@@ -42,7 +43,7 @@ export default function PrivacyPage() {
         Your email is used only to send sign-in links. We don&apos;t send
         marketing email, and we don&apos;t share or sell your data. You can
         delete your account and all of this data at any time from the{" "}
-        <a href="/account">account page</a>.
+        <Link href="/account">account page</Link>.
       </p>
 
       <h2>Analytics</h2>

@@ -78,7 +78,11 @@ export async function captureStep(
   const dir = path.join(OUT_DIR, region, step);
   await mkdir(dir, { recursive: true });
 
-  const browser = await chromium.launch();
+  // CHROMIUM_PATH lets cloud sessions use their preinstalled browser when it
+  // doesn't match the Playwright version; unset, Playwright uses its own.
+  const browser = await chromium.launch({
+    executablePath: process.env.CHROMIUM_PATH || undefined,
+  });
   const page = await browser.newPage({
     viewport: { width: 1280, height: 800 },
     locale: "en-CA",

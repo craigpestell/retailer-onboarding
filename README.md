@@ -9,6 +9,8 @@ Optional account (magic-link email login): progress saved to Postgres and synced
     npm run dev      # http://localhost:3000
     npm run build && npm start
 
+In Claude Code cloud sessions, `.claude/hooks/session-start.sh` installs dependencies, starts a local Postgres, writes a `.env.local` for it (if none exists) and runs the migrations. Government sites are blocked from the cloud, so guide screenshots are captured on a local machine.
+
 ## Edit the content
 
 Each region has a folder of steps, `content/<code>/` (`bc`, `on`, …). The home page lists every province, territory and state from `research/queue.json`; a region becomes a live guide as soon as its `content/<code>/` folder exists, and stays "coming soon" until then. Routes are `/<code>` and `/<code>/steps/<slug>`.
