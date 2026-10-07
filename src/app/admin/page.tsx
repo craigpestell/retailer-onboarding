@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { and, desc, eq, gt, sql } from "drizzle-orm";
+import { and, desc, eq, gt, isNull, ne, or, sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import { checklistEvents, progress, users } from "@/db/schema";
 import { getSessionUser, isAdmin } from "@/lib/auth";
 import { validItemIds } from "@/lib/progress-server";
 import { getAvailableRegions } from "@/lib/regions";
 import { getSteps } from "@/lib/steps";
+import { purgeEvents } from "./actions";
 
 /** "on:hst:1" → { region, step, item } for display. */
 function itemLabels() {
@@ -33,12 +34,33 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminPage(props: PageProps<"/admin">) {
-  if (!isAdmin(await getSessionUser())) notFound();
+  const admin = await getSessionUser();
+  if (!admin || !isAdmin(admin)) notFound();
 
   const regions = getAvailableRegions();
-  const { region: regionParam } = await props.searchParams;
-  const region = regions.find((r) => r.slug === regionParam);
-  const inRegion = region ? eq(checklistEvents.region, region.slug) : undefined;
+  const params = await props.searchParams;
+  const region = regions.find((r) => r.slug === params.region);
+  const hideMine = params.mine === "hide";
+  const purged = params.purged === "1";
+  const filter = and(
+    region ? eq(checklistEvents.region, region.slug) : undefined,
+    hideMine
+      ? or(isNull(checklistEvents.userId), ne(checklistEvents.userId, admin.id))
+      : undefined,
+  );
+  /** /admin URL with the current filters, overridden by `changes`. */
+  const adminHref = (changes: { region?: string; mine?: string }) => {
+    const query = new URLSearchParams();
+    const r = "region" in changes ? changes.region : region?.slug;
+    const m = "mine" in changes ? changes.mine : hideMine ? "hide" : undefined;
+    if (r) query.set("region", r);
+    if (m) query.set("mine", m);
+    const qs = query.toString();
+    return qs ? `/admin?${qs}` : "/admin";
+  };
+  const [{ eventCount }] = await getDb()
+    .select({ eventCount: sql<number>`count(*)::int` })
+    .from(checklistEvents);
 
   const total = validItemIds().size;
   const rows = await getDb()
@@ -62,7 +84,7 @@ export default async function AdminPage(props: PageProps<"/admin">) {
     })
     .from(checklistEvents)
     .where(
-      and(gt(checklistEvents.createdAt, sql`now() - interval '30 days'`), inRegion),
+      and(gt(checklistEvents.createdAt, sql`now() - interval '30 days'`), filter),
     )
     .groupBy(checklistEvents.itemId)
     .orderBy(desc(sql`count(*) filter (where ${checklistEvents.done})`));
@@ -77,7 +99,7 @@ export default async function AdminPage(props: PageProps<"/admin">) {
     })
     .from(checklistEvents)
     .leftJoin(users, eq(users.id, checklistEvents.userId))
-    .where(inRegion)
+    .where(filter)
     .orderBy(desc(checklistEvents.createdAt))
     .limit(50);
   const labels = itemLabels();
@@ -133,7 +155,7 @@ export default async function AdminPage(props: PageProps<"/admin">) {
           return (
             <Link
               key={r.slug || "all"}
-              href={r.slug ? `/admin?region=${r.slug}` : "/admin"}
+              href={adminHref({ region: r.slug || undefined })}
               aria-current={active ? "page" : undefined}
               className={`rounded-full border px-3 py-1 ${
                 active
@@ -146,6 +168,16 @@ export default async function AdminPage(props: PageProps<"/admin">) {
           );
         })}
       </nav>
+      <div className="mt-3 text-sm">
+        <Link
+          href={adminHref({ mine: hideMine ? undefined : "hide" })}
+          className="text-emerald-700 underline dark:text-emerald-400"
+        >
+          {hideMine
+            ? `Showing everyone except ${admin.email}. Include my events`
+            : `Exclude my events (${admin.email})`}
+        </Link>
+      </div>
       <div className="mt-6 overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead className="text-neutral-500">
@@ -220,6 +252,36 @@ export default async function AdminPage(props: PageProps<"/admin">) {
           </tbody>
         </table>
       </div>
+
+      <h2 className="mt-12 text-xl font-bold tracking-tight">Purge events</h2>
+      {purged ? (
+        <p className="mt-2 text-sm text-emerald-700 dark:text-emerald-400">
+          All events were deleted.
+        </p>
+      ) : null}
+      <form action={purgeEvents} className="mt-3 space-y-3 text-sm">
+        <p className="text-neutral-500">
+          Permanently deletes all {eventCount} recorded events, for every
+          region and user. Ticked progress in accounts isn&apos;t affected.
+        </p>
+        <label className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            name="confirm"
+            value="yes"
+            required
+            className="h-4 w-4 accent-red-600"
+          />
+          Yes, delete all {eventCount} events. This can&apos;t be undone.
+        </label>
+        <button
+          type="submit"
+          disabled={eventCount === 0}
+          className="rounded-lg bg-red-600 px-4 py-2 font-medium text-white hover:bg-red-700 disabled:opacity-50"
+        >
+          Purge all events
+        </button>
+      </form>
     </div>
   );
 }
